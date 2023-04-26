@@ -9,6 +9,8 @@ void setup() {
   DDRD = 0x90;
 }
 
+
+
 void setupMotor() {
   noInterrupts();
   DDRB = 0X3C;
@@ -44,14 +46,16 @@ ISR(PCINT9_vect) {
 }
 ISR(PCINT10_vect) {
 
-  for (int i = 0; i < 60; i++) {  // repeat for 60 cycles (1 minute)
+  //for (int i = 0; i < 60; i++) {  // repeat for 60 cycles (1 minute)
+  if ((PINC & 0x04) != 0x04){
     PORTD |= (1 << 3);            // turn the buzzer on using bit manipulation
-    delay(100);                   // wait for 0.1 seconds
+  delay(100);                   // wait for 0.1 seconds
     PORTD &= ~(1 << 3);           // turn the buzzer off using bit manipulation
     delay(100);                   // wait for 0.1 seconds
   }
-  delay(10000);  // wait for 1 minute before repeating the cycle}
 }
+  
+
 
 void SetLatch() {
   PORTD = PORTD | 0x10;
@@ -92,19 +96,22 @@ void Display(unsigned char digit, unsigned char number) {
 int main() {
   PORTB = 0Xff;
   PORTC = 0x02;
-  PORTD = 0X00;
+ // PORTD = 0X00;
 
 
   while (1) {
-    if ((PINC & 0x02) == 0x02) {
+    if ((PINC & 0x02) != 0x02) {
       setup();
       displaySegments();
-      setupMotor();
-      setup_buzzer();
+       setupMotor();
+       
+    
     }
     
   if ((PINC & 0x04) != 0x04) {
-     setup_buzzer();
+    
+    setup_buzzer();
+    
     }
     
   }
